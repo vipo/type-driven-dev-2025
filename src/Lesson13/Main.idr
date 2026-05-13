@@ -79,11 +79,23 @@ destroyUndT u = dropUnd u
 destroyUndT' : (1 _ : UndT) -> UndT
 destroyUndT' x = x
 
--- context : ()
--- context =
---     let 1 u = mkUnd in
---     let 1 x = ?asddestroyUndT u in
---     ()
+context : ()
+context =
+    let u = mkUnd in
+    let () = dropUnd u in -- fails with _ instead of ()
+    ()
+
+context' : ()
+context' =
+    let u = mkUnd in
+    dropUnd u
+
+-- bad, here we leak the value.
+context'' : UndT
+context'' =
+    let u = mkUnd in
+    destroyUndT' u
+
 
 undProto : ()
 undProto = mkUndF $ \u => dropUnd u
